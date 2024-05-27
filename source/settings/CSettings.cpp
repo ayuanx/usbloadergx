@@ -398,6 +398,7 @@ bool CSettings::Save()
 	fprintf(file, "returnTo = %s\n", returnTo);
 	fprintf(file, "HomeMenu = %d\n", HomeMenu);
 	fprintf(file, "MultiplePartitions = %d\n", MultiplePartitions);
+	fprintf(file, "SDMode = %d\n", SDMode);
 	fprintf(file, "USBPort = %d\n", USBPort);
 	fprintf(file, "USBAutoMount = %d\n", USBAutoMount);
 	fprintf(file, "BlockIOSReload = %d\n", BlockIOSReload);
@@ -791,6 +792,11 @@ bool CSettings::SetSetting(char *name, char *value)
 	else if (strcmp(name, "BlockIOSReload") == 0)
 	{
 		BlockIOSReload = atoi(value);
+		return true;
+	}
+	else if (strcmp(name, "SDMode") == 0)
+	{
+		SDMode = atoi(value);
 		return true;
 	}
 	else if (strcmp(name, "USBPort") == 0)

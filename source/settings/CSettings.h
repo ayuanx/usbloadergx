@@ -243,11 +243,11 @@ class CSettings
 		short GCInstallCompressed;
 		short GCInstallAligned;
 		short PrivateServer;
+		short SDMode;
 
 		// These variables are not saved to the settings file
 		bool FirstTimeRun;
 		bool skipSaving;
-		short SDMode;
 	protected:
 		bool ValidVersion(FILE * file);
 		bool ValidateURL(char *value, int type = 0);

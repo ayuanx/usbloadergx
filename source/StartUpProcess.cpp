@@ -321,19 +321,6 @@ int StartUpProcess::Execute(bool quickGameBoot)
 	SetTextf("Initializing SD card\n");
 	DeviceHandler::Instance()->MountSD();
 
-	// Do not mount USB if not needed. USB is not available with WiiU WiiVC injected channel
-	bool USBSuccess = false;
-	if (Settings.USBAutoMount == ON && !isWiiVC && !Settings.SDMode)
-	{
-		SetTextf("Initializing USB devices\n");
-		if (USBSpinUp())
-		{
-			DeviceHandler::Instance()->MountAllUSB(false);
-			USBSuccess = true;
-			gprintf("Completed initialization of USB devices\n");
-		}
-	}
-
 	SetTextf("Loading config files\n");
 	gprintf("\tLoading config...%s\n", Settings.Load() ? "done" : "failed");
 	gprintf("\tLoading language...%s\n", Settings.LoadLanguage(Settings.language_path, CONSOLE_DEFAULT) ? "done" : "failed");
@@ -351,6 +338,21 @@ int StartUpProcess::Execute(bool quickGameBoot)
 		Settings.skipSaving = true;
 	}
 
+	// Do not mount USB if not needed. USB is not available with WiiU WiiVC injected channel
+	bool USBSuccess = false;
+	if (Settings.SDMode)
+		sdhc_mode_sd = 1;
+	else if (Settings.USBAutoMount == ON && !isWiiVC)
+	{
+		SetTextf("Initializing USB devices\n");
+		if (USBSpinUp())
+		{
+			DeviceHandler::Instance()->MountAllUSB(false);
+			USBSuccess = true;
+			gprintf("Completed initialization of USB devices\n");
+		}
+	}
+	
 	// Reload to users settings if different than current IOS, and if not using an injected WiiU WiiVC IOS255 (fw.img)
 	if (Settings.LoaderIOS != IOS_GetVersion() && !isWiiVC)
 	{
@@ -376,7 +378,9 @@ int StartUpProcess::Execute(bool quickGameBoot)
 		SetupPads();
 
 		DeviceHandler::Instance()->MountSD();
-		if (Settings.USBAutoMount == ON && !Settings.SDMode && USBSuccess)
+		if (Settings.SDMode)
+			sdhc_mode_sd = 1;
+		else if (Settings.USBAutoMount == ON && USBSuccess)
 		{
 			if (USBSpinUp())
 				DeviceHandler::Instance()->MountAllUSB(false);
