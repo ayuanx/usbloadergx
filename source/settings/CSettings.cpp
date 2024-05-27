@@ -152,6 +152,7 @@ void CSettings::SetDefault()
 	HomeMenu = HOME_MENU_DEFAULT;
 	MultiplePartitions = OFF;
 	BlockIOSReload = AUTO;
+	SDMode = 0;
 	USBPort = 0;
 	USBAutoMount = ON;
 	WSFactor = 0.8f; //actually should be 0.75 for real widescreen
